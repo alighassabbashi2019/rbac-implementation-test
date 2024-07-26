@@ -9,8 +9,7 @@ import { RequiredPermissions } from '@decorator/required-permissions.decorator';
 import { ActionEnum, RoleEnum } from '@constant/enum';
 
 @Controller('user')
-@UseGuards(RoleGuard)
-@UseGuards(AuthGuard)
+@UseGuards(AuthGuard, RoleGuard)
 @Roles(RoleEnum.ADMIN, RoleEnum.CUSTOMER)
 export class UserController {
   constructor(private readonly userService: UserService) {
@@ -23,7 +22,6 @@ export class UserController {
   }
 
   @Post('/')
-  @UseGuards(RoleGuard)
   createNewUser(@Body() createUserDto: CreateUserDto) {
     return this.userService.create(createUserDto);
   }

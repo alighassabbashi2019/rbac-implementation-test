@@ -9,8 +9,7 @@ import { ActionEnum, RoleEnum } from '@constant/enum';
 import { RequiredPermissions } from '@decorator/required-permissions.decorator';
 
 @Controller('product')
-@UseGuards(RoleGuard)
-@UseGuards(AuthGuard)
+@UseGuards(AuthGuard, RoleGuard)
 @Roles(RoleEnum.ADMIN)
 export class ProductController {
   constructor(private readonly productService: ProductService) {
