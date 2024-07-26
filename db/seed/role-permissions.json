@@ -1,0 +1,22 @@
+{
+  "admin": [
+    "user_read_single",
+    "user_read_all",
+    "user_read_filtered",
+    "user_create",
+    "user_update",
+    "user_delete",
+    "product_read_single",
+    "product_read_all",
+    "product_read_filtered",
+    "product_create",
+    "product_update",
+    "product_delete"
+  ],
+  "customer": [
+    "user_read_single",
+    "user_update",
+    "product_read_single",
+    "product_read_filtered"
+  ]
+}
