@@ -3,9 +3,9 @@ import { UserService } from './user.service';
 import { UserController } from './user.controller';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { UserRepository } from '@user/model/user/user.repository';
-import { RolePermissionRepository } from '@authentication/model';
+import { RoleActionsRepository } from '@authentication/model';
 
-const repositories = [UserRepository, RolePermissionRepository];
+const repositories = [UserRepository, RoleActionsRepository];
 
 @Module({
   imports: [TypeOrmModule.forFeature(repositories)],

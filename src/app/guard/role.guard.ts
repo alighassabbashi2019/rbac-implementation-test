@@ -1,14 +1,15 @@
 import { CanActivate, ExecutionContext, Injectable, UnauthorizedException } from '@nestjs/common';
 import { Reflector } from '@nestjs/core';
-import { RolePermissionRepository } from '@authentication/model';
-import { ALLOWED_ACTIONS_KEY } from '@decorator/permissions.decorator';
+import { RoleActionsRepository } from '@authentication/model';
+import { REQUIRED_PERMISSIONS } from '@decorator/required-permissions.decorator';
 import { In } from 'typeorm';
+import { RequiredPermission } from '@interface/required-permission.interface';
 
 @Injectable()
 export class RoleGuard implements CanActivate {
   constructor(
     private readonly reflector: Reflector,
-    private readonly RolePermissionRepository: RolePermissionRepository,
+    private readonly roleActionsRepository: RoleActionsRepository,
   ) {
   }
 
@@ -17,19 +18,21 @@ export class RoleGuard implements CanActivate {
     const limitedRoles = this.reflector.get<string[]>(context.getClass().name, context.getClass());
     if (limitedRoles?.length && !limitedRoles.includes(user.role.name)) throw new UnauthorizedException();
 
-    const requiredPermissions: string[] = this.reflector.getAllAndOverride<string[]>(ALLOWED_ACTIONS_KEY, [
+    const requiredPermissions: RequiredPermission = this.reflector.getAllAndOverride<string[]>(REQUIRED_PERMISSIONS, [
       context.getHandler(),
       context.getClass(),
-    ]) as string[];
-    const rolePermissions = await this.RolePermissionRepository.find({
+    ]) as unknown as RequiredPermission;
+    if (!requiredPermissions.roles.includes(user.role.name)) throw new UnauthorizedException();
+    const thisRolePermissions = requiredPermissions.actions;
+    const savedRolePermissions = await this.roleActionsRepository.find({
       relations: ['action'],
       where: {
         roleId: user.role.id,
         action: {
-          name: In(requiredPermissions),
+          name: In(thisRolePermissions),
         },
       },
     });
-    return requiredPermissions.length === rolePermissions.length;
+    return thisRolePermissions.length === savedRolePermissions.length;
   }
 }

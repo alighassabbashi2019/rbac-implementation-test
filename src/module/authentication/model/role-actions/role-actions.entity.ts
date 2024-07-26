@@ -1,8 +1,8 @@
 import { Column, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
 import { ActionEntity, RoleEntity } from '@authentication/model';
 
-@Entity('role_permissions')
-export class RolePermissionEntity {
+@Entity('role_actions')
+export class RoleActionsEntity {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 

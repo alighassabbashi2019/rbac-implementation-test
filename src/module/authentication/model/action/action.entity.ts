@@ -1,5 +1,5 @@
 import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
-import { RolePermissionEntity } from '@authentication/model';
+import { RoleActionsEntity } from '@authentication/model';
 import { ActionEnum } from '@constant/enum';
 
 @Entity('actions')
@@ -10,6 +10,6 @@ export class ActionEntity {
   @Column({ type: 'enum', enum: ActionEnum })
   name: ActionEnum;
 
-  @OneToMany(() => RolePermissionEntity, rolePermission => rolePermission.action)
-  roles: RolePermissionEntity;
+  @OneToMany(() => RoleActionsEntity, roleAction => roleAction.action)
+  roles: RoleActionsEntity;
 }

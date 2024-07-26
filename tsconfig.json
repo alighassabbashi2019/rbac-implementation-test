@@ -32,6 +32,9 @@
       "@guard/*": [
         "src/app/guard/*"
       ],
+      "@interface/*": [
+        "src/app/interface/*"
+      ],
       "@authentication/*": [
         "src/module/authentication/*"
       ],

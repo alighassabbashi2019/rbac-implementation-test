@@ -3,12 +3,12 @@ import { AuthenticationResponse } from '@authentication/response/login.response'
 import { compare, hashSync } from 'bcrypt';
 import { UserService } from '@user/user.service';
 import { CreateUserDto } from '@user/dto';
-import { ActionRepository, RolePermissionRepository, RoleRepository } from '@authentication/model';
+import { ActionRepository, RoleActionsRepository, RoleRepository } from '@authentication/model';
 import { sign } from 'jsonwebtoken';
 import { AuthenticationDto } from '@authentication/dto';
 import { UserEntity } from '@user/model/user/user.entity';
 import { JwtTokenInterface } from '@authentication/interface/jwt-token.interface';
-import RolePermissionSeedJson from '@db/seed/role-permissions.json';
+import RoleActionsSeedJson from '@db/seed/role-actions.json';
 import { ActionEnum, RoleEnum } from '@constant/enum';
 
 @Injectable()
@@ -17,14 +17,14 @@ export class AuthenticationService implements OnModuleInit {
     private readonly userService: UserService,
     private readonly roleRepository: RoleRepository,
     private readonly actionRepository: ActionRepository,
-    private readonly rolePermissionRepository: RolePermissionRepository,
+    private readonly roleActionsRepository: RoleActionsRepository,
   ) {
   }
 
   async onModuleInit(): Promise<void> {
-    const rolePermissionCount = await this.rolePermissionRepository.count();
+    const rolePermissionCount = await this.roleActionsRepository.count();
     if (!rolePermissionCount) {
-      const flattened = Object.entries(RolePermissionSeedJson).flatMap(([role, actions]) =>
+      const flattened = Object.entries(RoleActionsSeedJson).flatMap(([role, actions]) =>
         actions.map(action => {
           return {
             role,
@@ -32,17 +32,17 @@ export class AuthenticationService implements OnModuleInit {
           };
         }),
       );
-      const rolePermissions = await Promise.all(
+      const roleActions = await Promise.all(
         flattened.map(async dto => {
           const role = await this.roleRepository.findOne({ where: { name: dto.role as RoleEnum } });
           const action = await this.actionRepository.findOne({ where: { name: dto.action as ActionEnum } });
-          return this.rolePermissionRepository.create({
+          return this.roleActionsRepository.create({
             actionId: action.id,
             roleId: role.id,
           });
         }),
       );
-      await this.rolePermissionRepository.save(rolePermissions);
+      await this.roleActionsRepository.save(roleActions);
     }
   }
 

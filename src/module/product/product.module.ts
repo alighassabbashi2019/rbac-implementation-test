@@ -4,9 +4,9 @@ import { ProductController } from './product.controller';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { ProductRepository } from './model/product.repository';
 import { UserModule } from '@user/user.module';
-import { RolePermissionRepository } from '@authentication/model';
+import { RoleActionsRepository } from '@authentication/model';
 
-const repositories = [ProductRepository, RolePermissionRepository];
+const repositories = [ProductRepository, RoleActionsRepository];
 
 @Module({
   imports: [TypeOrmModule.forFeature(repositories), UserModule],
