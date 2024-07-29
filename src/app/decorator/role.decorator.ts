@@ -1,8 +1,5 @@
 import { SetMetadata } from '@nestjs/common';
 import { RoleEnum } from '@constant/enum';
 
-export const Roles = (...roles: RoleEnum[]) => {
-  return (target: any) => {
-    SetMetadata(target.prototype.constructor.name, roles)(target);
-  };
-};
+export const ROLES_KEY = 'roles';
+export const Roles = (...roles: RoleEnum[]) => SetMetadata(ROLES_KEY, roles);

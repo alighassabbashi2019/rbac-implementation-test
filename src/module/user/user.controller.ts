@@ -5,7 +5,7 @@ import { Roles } from '@decorator/role.decorator';
 import { AuthGuard, RoleGuard } from '../../app/guard';
 import { CurrentUser } from '@decorator/current-user.decorator';
 import { UserEntity } from '@user/model/user/user.entity';
-import { RequiredPermissions } from '@decorator/required-permissions.decorator';
+import { Permissions } from '@decorator/required-permissions.decorator';
 import { ActionEnum, RoleEnum } from '@constant/enum';
 
 @Controller('user')
@@ -16,7 +16,8 @@ export class UserController {
   }
 
   @Get('/')
-  @RequiredPermissions([RoleEnum.ADMIN], [ActionEnum.USER_READ_ALL])
+  @Roles(RoleEnum.ADMIN)
+  @Permissions(ActionEnum.USER_READ_ALL)
   getAllUsers() {
     return this.userService.getAll();
   }
@@ -27,7 +28,7 @@ export class UserController {
   }
 
   @Patch('/:id')
-  @RequiredPermissions([RoleEnum.ADMIN, RoleEnum.CUSTOMER], [ActionEnum.USER_UPDATE])
+  @Permissions(ActionEnum.PRODUCT_UPDATE)
   updateUser(
     @CurrentUser() currentUser: UserEntity,
     @Param('id', new ParseUUIDPipe()) id: string,
@@ -37,7 +38,8 @@ export class UserController {
   }
 
   @Delete('/:id')
-  @RequiredPermissions([RoleEnum.ADMIN], [ActionEnum.USER_DELETE])
+  @Roles(RoleEnum.ADMIN)
+  @Permissions(ActionEnum.USER_DELETE)
   deleteUser(@Param('id', new ParseUUIDPipe()) id: string) {
     return this.userService.delete(id);
   }

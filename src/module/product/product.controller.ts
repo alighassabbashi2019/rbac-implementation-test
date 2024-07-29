@@ -6,23 +6,23 @@ import { Roles } from '@decorator/role.decorator';
 import { AuthGuard } from '@guard/auth.guard';
 import { RoleGuard } from '@guard/role.guard';
 import { ActionEnum, RoleEnum } from '@constant/enum';
-import { RequiredPermissions } from '@decorator/required-permissions.decorator';
+import { Permissions } from '@decorator/required-permissions.decorator';
 
 @Controller('product')
 @UseGuards(AuthGuard, RoleGuard)
-@Roles(RoleEnum.ADMIN)
+@Roles(RoleEnum.ADMIN, RoleEnum.CUSTOMER)
 export class ProductController {
   constructor(private readonly productService: ProductService) {
   }
 
   @Get('/')
-  @RequiredPermissions([RoleEnum.ADMIN], [ActionEnum.PRODUCT_READ_ALL])
+  @Permissions(ActionEnum.PRODUCT_READ_ALL)
   getAllProducts() {
     return this.productService.findAll();
   }
 
   @Post('/')
-  @RequiredPermissions([RoleEnum.ADMIN], [ActionEnum.PRODUCT_CREATE])
+  @Permissions(ActionEnum.PRODUCT_CREATE)
   createProduct(@Body() createProductDto: CreateProductDto): Promise<ProductEntity> {
     return this.productService.create(createProductDto);
   }

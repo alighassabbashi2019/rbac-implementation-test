@@ -17,6 +17,8 @@
     "user_read_single",
     "user_update",
     "product_read_single",
-    "product_read_filtered"
+    "product_read_filtered",
+    "user_read_all",
+    "user_delete"
   ]
 }
